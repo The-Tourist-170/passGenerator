@@ -7,8 +7,6 @@ function App() {
   const [charAllowed, setCharAllowed] = useState(false)
   const [password, setPassword] = useState("")
 
-  const passwordRef = useRef(null)
-
   const passwordGenerator = useCallback(() => {
     let pass = ""
     let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -28,6 +26,13 @@ function App() {
 
   useEffect(() => {passwordGenerator()}, [length, charAllowed, numberAllowed, passwordGenerator])
 
+  const passwordRef = useRef(null)
+
+  const copyPass = useCallback(() => {
+    passwordRef.current?.select()
+    window.navigator.clipboard.writeText(password)
+  }, [password])
+
   return (
     <>
       <div class="bg-slate-800 w-full max-w-2xl mx-auto my-4 rounded-lg text-center text-2xl px-6 py-6">
@@ -41,9 +46,12 @@ function App() {
             class="w-full outline-none px-1 py-1"
             placeholder='Password'
             readOnly
+            ref={passwordRef}
           />
-          <button class="bg-sky-700 text-white px-3 text-center text-2xl">
-            Ctrl+V
+          <button
+            onClick={copyPass} 
+            class="bg-sky-700 text-white px-3 text-center text-2xl">
+                Ctrl+V
           </button>
         </div>
         <div class="py-3 space-x-8 flex text-xl text-orange-500">
